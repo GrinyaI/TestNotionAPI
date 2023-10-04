@@ -52,27 +52,23 @@ def fix_lesson(LESSON: str):
 def fix_group(GROUP: str):
     return GROUP.upper()
 
-def find_Student(FULLNAME: str, GROUP: str, LESSON: dict):
-    try:
-        if LESSON.get(GROUP) is None:
-            return False #"Такой группы в данном предмете не существует"
-        elif FULLNAME == "ФИО введенно неверно":
-            return False #"ФИО введенно неверно"
-        else:
-            for i in range(0, len(LESSON[GROUP]) - 1):
-                pages = get_pages_database(LESSON[GROUP][i])
-                for page in pages:
-                    props = page["properties"]
-                    name = props["Name"]["title"][0]["text"]["content"]
-                    if name == FULLNAME:
-                        return True #f"Студент {name} найден в группе {GROUP}"
-                return False # f"Студент {FULLNAME} в группе {GROUP} не найден"
-            return False
-    except:
-        print("Функция find_Student не сработала")
+def find_Student(LESSON: dict,  GROUP: str, FULLNAME: str):
+    if LESSON.get(GROUP) is None:
+        return False #"Такой группы в данном предмете не существует"
+    elif FULLNAME == "ФИО введенно неверно":
+        return False #"ФИО введенно неверно"
+    else:
+        for i in range(0, len(LESSON[GROUP]) - 1):
+            pages = get_pages_database(LESSON[GROUP][i])
+            for page in pages:
+                props = page["properties"]
+                name = props["Name"]["title"][0]["text"]["content"]
+                if name == FULLNAME:
+                    return True #f"Студент {name} найден в группе {GROUP}"
+            return False # f"Студент {FULLNAME} в группе {GROUP} не найден"
 
-def show_me_my_points(FULLNAME: str, GROUP: str, LESSON: dict):
-    if find_Student(FULLNAME, GROUP, LESSON) != True:
+def show_me_my_points(LESSON: dict, GROUP: str, FULLNAME: str ):
+    if find_Student(LESSON, GROUP, FULLNAME) != True:
         return False
     else:
         for i in range(0, len(LESSON[GROUP]) - 1):
@@ -89,4 +85,4 @@ def main():
     # lesson = fix_lesson(input("Введите предмет: "))
     # group = fix_group(input("Введите группу: "))
     # fullname = fix_full_name(input("Введите ФИО: "))
-    print(show_me_my_points(fix_full_name(input("ФИО: ")), "ПИН-221", PYTHON_LESSON))
+    print(show_me_my_points(PYTHON_LESSON, "ПИН-221", "Гриневич Илья"))
